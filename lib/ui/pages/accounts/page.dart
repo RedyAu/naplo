@@ -21,6 +21,9 @@ class _AccountPageState extends State<AccountPage> {
     app.sync.updateCallback();
     app.sync.fullSync();
     app.user.kreta.userAgent = app.settings.config.config.userAgent;
+
+    app.user.sync.allPending();
+
     Navigator.of(context).pop();
   }
 
@@ -103,7 +106,9 @@ class _AccountPageState extends State<AccountPage> {
                       // Add user
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 14.0),
-                        child: FlatButton(
+                        child: MaterialButton(
+                          elevation: 0,
+                          highlightElevation: 0,
                           padding: EdgeInsets.zero,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
@@ -142,7 +147,9 @@ class _AccountPageState extends State<AccountPage> {
                 padding: EdgeInsets.only(bottom: 14.0),
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 14.0),
-                  child: FlatButton(
+                  child: MaterialButton(
+                    elevation: 0,
+                    highlightElevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     child: ListTile(

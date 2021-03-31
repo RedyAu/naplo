@@ -2,13 +2,14 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:filcnaplo/data/context/app.dart';
 import 'package:filcnaplo/generated/i18n.dart';
 import 'package:filcnaplo/helpers/account.dart';
-import 'package:filcnaplo/ui/pages/accounts/dkt.dart';
+import 'package:filcnaplo/ui/common/custom_snackbar.dart';
 import 'package:filcnaplo/ui/pages/accounts/edit.dart';
 import 'package:filcnaplo/utils/format.dart';
 import 'package:flutter/material.dart';
 import 'package:filcnaplo/ui/common/profile_icon.dart';
 import 'package:filcnaplo/data/models/user.dart';
 import 'package:filcnaplo/ui/pages/accounts/view.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 
 class AccountTile extends StatefulWidget {
   final User user;
@@ -32,7 +33,9 @@ class _AccountTileState extends State<AccountTile> {
     if (!editMode) {
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 14.0),
-        child: FlatButton(
+        child: MaterialButton(
+          elevation: 0,
+          highlightElevation: 0,
           padding: EdgeInsets.zero,
           onPressed: () {
             widget.onSelect(app.users.indexOf(widget.user));
@@ -66,33 +69,67 @@ class _AccountTileState extends State<AccountTile> {
                               builder: (context) => AccountView(widget.user,
                                   callback: () => setState(() {})),
                               backgroundColor: Colors.transparent,
-                            ).then((deleted) {
-                              if (deleted == true) widget.onDelete();
-                            });
+                            );
                           },
                         ),
                         AccountTileButton(
                           icon: FeatherIcons.edit2,
                           title: I18n.of(context).actionEdit,
-                          onPressed: () => setState(() => editMode = true),
+                          onPressed: () => {
+                            if (!app.debugUser)
+                              setState(() => editMode = true)
+                            else
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  CustomSnackBar(
+                                      color: Colors.red,
+                                      message: "Debug user can't be edited."))
+                          },
                         ),
                         AccountTileButton(
                           icon: FeatherIcons.grid,
                           title: "DKT",
                           onPressed: () {
-                            Navigator.of(context, rootNavigator: true).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        DKTPage(widget.user)));
+                            if (!app.debugUser) {
+                              String accessToken = app
+                                  .kretaApi.users[widget.user.id].accessToken;
+                              String dkturl =
+                                  "https://dkttanulo.e-kreta.hu/sso?accessToken=$accessToken";
+
+                              FlutterWebBrowser.openWebPage(
+                                url: dkturl,
+                                customTabsOptions: CustomTabsOptions(
+                                  toolbarColor:
+                                      app.settings.theme.backgroundColor,
+                                  showTitle: true,
+                                ),
+                                safariVCOptions: SafariViewControllerOptions(
+                                  dismissButtonStyle:
+                                      SafariViewControllerDismissButtonStyle
+                                          .close,
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  CustomSnackBar(
+                                      color: Colors.red,
+                                      message: "Debug user has no DKT page."));
+                            }
                           },
                         ),
                         AccountTileButton(
                           icon: FeatherIcons.trash2,
                           title: I18n.of(context).actionDelete,
                           onPressed: () {
-                            AccountHelper(user: widget.user)
-                                .deleteAccount(context);
-                            widget.onDelete();
+                            if (!app.debugUser) {
+                              AccountHelper(user: widget.user)
+                                  .deleteAccount(context);
+                              widget.onDelete();
+                            } else
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  CustomSnackBar(
+                                      color: Colors.red,
+                                      message:
+                                          "Restart the app to log out of Debug user."));
                           },
                         ),
                       ],
@@ -125,7 +162,9 @@ class AccountTileButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      child: FlatButton(
+      child: MaterialButton(
+        elevation: 0,
+        highlightElevation: 0,
         height: 50,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),

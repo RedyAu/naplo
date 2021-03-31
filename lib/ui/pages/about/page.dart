@@ -7,7 +7,7 @@ import 'package:filcnaplo/ui/pages/news/history.dart';
 import 'package:filcnaplo/utils/format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 
 class AboutPage extends StatelessWidget {
   @override
@@ -59,8 +59,7 @@ class AboutPage extends StatelessWidget {
                   text: I18n.of(context).aboutPrivacy,
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (context) => AboutPrivacy());
+                        context: context, builder: (context) => AboutPrivacy());
                   },
                 ),
                 AboutButton(
@@ -114,7 +113,17 @@ class AboutPage extends StatelessWidget {
                       color: Color(0xFF24292E),
                       label: "Github",
                       onPressed: () {
-                        launch("https://github.com/filcnaplo/filcnaplo");
+                        FlutterWebBrowser.openWebPage(
+                          url: "https://github.com/filcnaplo/filcnaplo",
+                          customTabsOptions: CustomTabsOptions(
+                            toolbarColor: app.settings.theme.backgroundColor,
+                            showTitle: true,
+                          ),
+                          safariVCOptions: SafariViewControllerOptions(
+                            dismissButtonStyle:
+                                SafariViewControllerDismissButtonStyle.close,
+                          ),
+                        );
                       },
                     ),
                     SocialButton(
@@ -126,7 +135,17 @@ class AboutPage extends StatelessWidget {
                       color: Color(0xFF1A4742),
                       label: "www.filcnaplo.hu",
                       onPressed: () {
-                        launch("https://www.filcnaplo.hu/");
+                        FlutterWebBrowser.openWebPage(
+                          url: "https://filcnaplo.hu/",
+                          customTabsOptions: CustomTabsOptions(
+                            toolbarColor: app.settings.theme.backgroundColor,
+                            showTitle: true,
+                          ),
+                          safariVCOptions: SafariViewControllerOptions(
+                            dismissButtonStyle:
+                                SafariViewControllerDismissButtonStyle.close,
+                          ),
+                        );
                       },
                     ),
                     SocialButton(
@@ -138,7 +157,17 @@ class AboutPage extends StatelessWidget {
                       color: Color(0xFF7289DA),
                       label: "Discord",
                       onPressed: () {
-                        launch("https://filcnaplo.hu/discord");
+                        FlutterWebBrowser.openWebPage(
+                          url: "https://filcnaplo.hu/discord",
+                          customTabsOptions: CustomTabsOptions(
+                            toolbarColor: app.settings.theme.backgroundColor,
+                            showTitle: true,
+                          ),
+                          safariVCOptions: SafariViewControllerOptions(
+                            dismissButtonStyle:
+                                SafariViewControllerDismissButtonStyle.close,
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -163,7 +192,7 @@ class AboutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 250.0,
-      child: FlatButton(
+      child: MaterialButton(
         shape: StadiumBorder(),
         child: ListTile(
             leading: icon != null
@@ -204,7 +233,7 @@ class SocialButton extends StatelessWidget {
               )
             ],
           ),
-          child: FlatButton(
+          child: MaterialButton(
             shape: CircleBorder(),
             child: icon,
             color: color,

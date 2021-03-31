@@ -78,6 +78,11 @@ class _EvaluationsPageState extends State<EvaluationsPage>
 
   @override
   Widget build(BuildContext context) {
+    if (app.user.sync.evaluation.uiPending) {
+      app.user.sync.evaluation.uiPending = false;
+      buildPage();
+    }
+
     return Scaffold(
       floatingActionButton: _tabController.index == 0
           ? EvaluationsDial(
@@ -149,8 +154,10 @@ class _EvaluationsPageState extends State<EvaluationsPage>
                               return types.contains(type);
                             },
                             callback: (value) {
-                              setState(() => selectedEvalType =
-                                  EvaluationType.values[value]);
+                              setState(() {
+                                selectedEvalType = EvaluationType.values[value];
+                                buildPage();
+                              });
                             },
                             initialValue: selectedEvalType.index,
                           )

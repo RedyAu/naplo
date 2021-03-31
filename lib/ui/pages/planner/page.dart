@@ -45,6 +45,8 @@ class _PlannerPageState extends State<PlannerPage>
       vsync: this,
       length: 3,
     );
+
+    buildPage();
   }
 
   @override
@@ -57,7 +59,11 @@ class _PlannerPageState extends State<PlannerPage>
 
   @override
   Widget build(BuildContext context) {
-    buildPage();
+    if (app.user.sync.homework.uiPending || app.user.sync.exam.uiPending) {
+      app.user.sync.homework.uiPending = false;
+      app.user.sync.exam.uiPending = false;
+      buildPage();
+    }
 
     return Scaffold(
       body: NestedScrollView(
@@ -143,18 +149,25 @@ class _PlannerPageState extends State<PlannerPage>
                           _homeworkBuilder.homeworkTiles[0].length == 0
                               ? Label(I18n.of(context).homeworkPast)
                               : _homeworkBuilder.homeworkTiles[1].length > 0
-                                  ? FlatButton(
+                                  ? TextButton(
                                       onPressed: () => setState(() =>
                                           showPastHomework = !showPastHomework),
                                       child: Row(
                                         children: [
                                           Expanded(
-                                              child: Text(I18n.of(context)
-                                                  .homeworkPast)),
+                                            child: Text(
+                                              I18n.of(context).homeworkPast,
+                                              style: TextStyle(
+                                                  color: app.settings.theme
+                                                      .accentColor),
+                                            ),
+                                          ),
                                           Icon(
                                             showPastHomework
                                                 ? FeatherIcons.chevronUp
                                                 : FeatherIcons.chevronDown,
+                                            color:
+                                                app.settings.theme.accentColor,
                                           ),
                                         ],
                                       ),
@@ -200,18 +213,25 @@ class _PlannerPageState extends State<PlannerPage>
                           _examBuilder.examTiles[0].length == 0
                               ? Label(I18n.of(context).examPast.toUpperCase())
                               : _examBuilder.examTiles[1].length > 0
-                                  ? FlatButton(
+                                  ? TextButton(
                                       onPressed: () => setState(
                                           () => showPastExams = !showPastExams),
                                       child: Row(
                                         children: [
                                           Expanded(
-                                              child: Text(
-                                                  I18n.of(context).examPast)),
+                                            child: Text(
+                                              I18n.of(context).examPast,
+                                              style: TextStyle(
+                                                  color: app.settings.theme
+                                                      .accentColor),
+                                            ),
+                                          ),
                                           Icon(
                                             showPastExams
                                                 ? FeatherIcons.chevronUp
                                                 : FeatherIcons.chevronDown,
+                                            color:
+                                                app.settings.theme.accentColor,
                                           ),
                                         ],
                                       ),

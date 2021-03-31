@@ -205,7 +205,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(
                   height: 46,
-                  child: FlatButton(
+                  child: MaterialButton(
+                    elevation: 0,
+                    highlightElevation: 0,
                     color: Colors.black12,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7.5)),
@@ -244,7 +246,9 @@ class _LoginPageState extends State<LoginPage> {
                   margin: EdgeInsets.only(top: 24),
                   width: 200,
                   height: 45,
-                  child: FlatButton(
+                  child: MaterialButton(
+                    elevation: 0,
+                    highlightElevation: 0,
                     onPressed: () {
                       setState(() => loading = true);
                       loginContext.loginError = {};
@@ -260,11 +264,14 @@ class _LoginPageState extends State<LoginPage> {
                             print(
                                 "DEBUG: Users currently logged in: ${app.users.where((user) => user.loginState)}");
                           if (app.users
-                                  .where((user) => user.loginState)
-                                  .length >
-                              0) {
+                                      .where((user) => user.loginState)
+                                      .length >
+                                  0 &&
+                              !app.debugUser) {
                             app.sync.fullSync();
-                            Navigator.of(context, rootNavigator: true).pop();
+                            Navigator.of(context)
+                                .pop(); //It turns out, you can pop twice!
+                            Navigator.of(context).pop();
                           } else {
                             Navigator.of(context, rootNavigator: true)
                                 .pushReplacement(MaterialPageRoute(

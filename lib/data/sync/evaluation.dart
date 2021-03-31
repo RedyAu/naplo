@@ -7,6 +7,7 @@ import 'package:filcnaplo/data/models/dummy.dart';
 class EvaluationSync {
   List<Evaluation> evaluations = [];
   List<dynamic> averages = [];
+  bool uiPending = true;
 
   Future<bool> sync() async {
     List<Evaluation> _evaluations;
@@ -20,13 +21,14 @@ class EvaluationSync {
 
       if (_evaluations == null) {
         await app.user.kreta.refreshLogin();
-        _evaluations = await app.user.kreta.getEvaluations() ?? [];
+        _evaluations = await app.user.kreta.getEvaluations();
         if (app.user.sync.student.student.groupId != null)
           _averages = await app.user.kreta
               .getAverages(app.user.sync.student.student.groupId);
       }
 
       if (_evaluations != null) {
+        _evaluations.sort((a, b) => -a.writeDate.compareTo(b.writeDate));
         evaluations = _evaluations;
         if (_averages != null) averages = _averages;
 
@@ -40,6 +42,8 @@ class EvaluationSync {
           }
         });
       }
+
+      uiPending = true;
 
       return _evaluations != null;
     } else {

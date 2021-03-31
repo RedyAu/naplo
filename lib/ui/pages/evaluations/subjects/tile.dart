@@ -6,6 +6,7 @@ import 'package:filcnaplo/helpers/averages.dart';
 import 'package:filcnaplo/ui/pages/evaluations/subjects/view.dart';
 import 'package:filcnaplo/utils/colors.dart';
 import 'package:filcnaplo/utils/format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SubjectTile extends StatelessWidget {
@@ -19,7 +20,9 @@ class SubjectTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.0),
-      child: FlatButton(
+      child: MaterialButton(
+        elevation: 0,
+        highlightElevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
         child: ListTile(
           contentPadding: EdgeInsets.zero,
@@ -107,7 +110,7 @@ class SubjectTile extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+          Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
               builder: (context) => SubjectView(subject, classAvg)));
         },
       ),

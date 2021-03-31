@@ -6,13 +6,13 @@ import 'package:filcnaplo/data/models/dummy.dart';
 
 class HomeworkSync {
   List<Homework> homework = [];
+  bool uiPending = true;
 
   Future<bool> sync() async {
     if (!app.debugUser) {
       List<Homework> _homework;
       DateTime from = DateTime.fromMillisecondsSinceEpoch(1);
       _homework = await app.user.kreta.getHomeworks(from);
-
       if (_homework == null) {
         await app.user.kreta.refreshLogin();
         _homework = await app.user.kreta.getHomeworks(from);
@@ -31,6 +31,8 @@ class HomeworkSync {
           }
         });
       }
+
+      uiPending = true;
 
       return _homework != null;
     } else {
