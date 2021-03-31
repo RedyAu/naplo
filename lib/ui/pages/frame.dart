@@ -15,6 +15,8 @@ import 'package:filcnaplo/utils/network.dart';
 import 'package:flutter/material.dart';
 import 'package:filcnaplo/data/context/app.dart';
 import 'package:filcnaplo/ui/common/bottom_navbar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class PageFrame extends StatefulWidget {
   @override
@@ -40,6 +42,23 @@ class _PageFrameState extends State<PageFrame> {
     });
 
     // Sync at startup
+
+    app.user.sync.release.sync().then((_) {
+      print("Deleing file");
+      getApplicationDocumentsDirectory().then((dir) {
+        dir
+            .listSync()
+            .where((file) =>
+                path.basename(file.path) ==
+                ("filcnaplo-" +
+                    app.user.sync.release.latestRelease.version +
+                    ".apk"))
+            .first
+            .delete()
+            .then((e) => print("File delete output: " + e.toString()));
+      });
+    });
+
     app.settings.update().then((_) {
       app.user.kreta.userAgent = app.settings.config.config.userAgent;
       app.settings.config.sync().then((success) {

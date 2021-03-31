@@ -164,6 +164,18 @@ class KretaClient {
     }
   }
 
+  Future<Map> getLatestRelease() async {
+    try {
+      var response = await http
+          .get(Uri.parse(BaseURL.FILC_REPO + FilcEndpoints.latestRelease));
+      var responseJson = json.decode(response.body);
+      return responseJson;
+    } catch (error) {
+      print("ERROR: GitHubAPI.getLatestRelease: " + error.toString());
+      return Map();
+    }
+  }
+
   Future<bool> login(User user) async {
     try {
       var response = await client.post(

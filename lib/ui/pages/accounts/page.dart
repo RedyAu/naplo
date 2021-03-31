@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:filcnaplo/ui/pages/settings/page.dart';
 import 'package:filcnaplo/generated/i18n.dart';
+import 'package:filcnaplo/modules/autoupdate/autoUpdater.dart';
+//import 'package:filcnaplo/modules/autoupdate/releaseSync.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -142,6 +144,8 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
               ),
+
+              if (app.user.sync.release.isNew) AutoUpdateButton(),
 
               Padding(
                 padding: EdgeInsets.only(bottom: 14.0),
